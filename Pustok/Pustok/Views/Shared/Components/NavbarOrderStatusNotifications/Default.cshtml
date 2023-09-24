@@ -1,0 +1,175 @@
+﻿@model List<OrderStatusNotificationViewModel>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+
+    .notification-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .notification-icon {
+        font-size: 30px;
+        margin-right: 10px;
+        cursor: pointer;
+        color: #525252;
+    }
+
+    .notification-list {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        right: 0;
+        top: 50px;
+        min-width: 500px;
+        max-height: 400px;
+        overflow-y: auto;
+        border-radius: 5px;
+    }
+
+
+    .notification-header {
+        background-color: #abd373;
+        color: #fff;
+        padding: 10px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-title {
+        font-weight: bold;
+    }
+
+    .notification-count {
+        background-color: #525252;
+        color: #fff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .notification-item {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+    }
+
+    .icon {
+        margin-right: 10px;
+    }
+
+    .notification-title {
+        font-weight: bold;
+    }
+
+    .date {
+        margin-left: auto;
+        color: #666;
+    }
+
+    .commands {
+        margin-left: 20px;
+        display:flex;
+    }
+
+        .commands a {
+            margin-right: 10px;
+            color: #525252;
+            text-decoration: none;
+        }
+
+    .unread-icon {
+        color: #ff3d3d;
+        font-size: 30px;
+    }
+
+    .read-icon {
+        color: #abd373;
+        font-size: 30px;
+    }
+
+
+    .notification-item:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+<div class="notification-dropdown">
+    <span class="notification-icon" onclick="toggleNotifications()">
+        <i class="fas fa-bell"></i>
+    </span>
+    <div class="notification-list" id="notificationList">
+        <div class="notification-header">
+            <span class="header-title">Notifications</span>
+            <div class="notification-count">5</div>
+        </div>
+
+
+
+
+        @foreach (var OrderStatusNotification in Model)
+        {
+            <div class="notification-item">
+                @*@if(OrderStatusNotification.IsRead == false)
+                {
+                   <div class="icon unread-icon">
+                       <i class="fas fa-envelope fa-xl"></i>
+                    </div>
+
+                }*@
+                
+                    <div class="icon read-icon">
+                        <i class="fas fa-envelope fa-xl"></i>
+                    </div>
+                
+                <div class="content">
+                    <div class="notification-title">@OrderStatusNotification.Title</div>
+                    <div class="notification-text">@OrderStatusNotification.Content</div>
+                </div>
+                <div class="date">
+                    <span>@OrderStatusNotification.CreatedAt.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="commands">
+                    <a href="#">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        }
+
+
+
+
+    </div>
+</div>
+
+<script>
+    function toggleNotifications() {
+        var notificationList = document.getElementById("notificationList");
+        notificationList.style.display = notificationList.style.display === "block" ? "none" : "block";
+    }
+</script>
+        
+
+
+      
+
+
+       
+       
+
