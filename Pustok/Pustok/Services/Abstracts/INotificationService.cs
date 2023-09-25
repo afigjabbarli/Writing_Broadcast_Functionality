@@ -13,10 +13,7 @@ namespace Pustok.Services.Abstracts
 
         public void SendingToCustomersOrderStatusNotifications(Order order);
 
-        public void SendOrderConfirmationNotice(Order order);
-        public void SendOrderRejectionNotice(Order order);
-        public void SendOrderShippingNotice(Order order);
-        public void SendOrderCompleteNotice(Order order);
+      
 
     }
 }

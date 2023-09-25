@@ -65,7 +65,7 @@ public class OrderController : Controller
         }
 
         order.OrderItems = orderItems;
-
+        _nofitificationService.SendingToCustomersOrderStatusNotifications(order);   
         _nofitificationService.SendOrderNotification(order);
 
         pustokDbContext.Orders.Add(order);

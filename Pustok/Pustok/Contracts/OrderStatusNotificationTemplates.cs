@@ -8,6 +8,7 @@
         }
         public class Content
         {
+            public const string CREATED = "Dear customer {Surname} {Name}, your order #{Order_Tracking_Code} has been created.";
             public const string APPROVED = "Dear customer {Surname} {Name}, your order #{Order_Tracking_Code} has been confirmed.";
             public const string REJECTED = "Dear customer {Surname} {Name}, your order #{Order_Tracking_Code} has been rejected.";
             public const string SENT = "Dear customer {Surname} {Name}, your order #{Order_Tracking_Code} has been shipped. The courier will contact you as soon as possible";

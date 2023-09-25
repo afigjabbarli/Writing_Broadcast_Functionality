@@ -176,30 +176,76 @@ public class NotificationService : INotificationService
 
     public void SendingToCustomersOrderStatusNotifications(Order order)
     {
-        switch (order.Status)
+          //var user = _pustokDbContext.Users.SingleOrDefault(u => u.Id == order.UserId);
+          //if(user is not null)
+          //{
+
+          //}
+                switch (order.Status)
+                {
+                     case OrderStatus.Created:
+                           SendOrderCreatedNotice(order);  
+                     break;
+                     case OrderStatus.Approved:
+                           SendOrderConfirmationNotice(order);
+                     break;
+                     case OrderStatus.Rejected:
+                          SendOrderRejectionNotice(order);
+                     break;
+                     case OrderStatus.Sent:
+                          SendOrderShippingNotice(order); 
+                     break;
+                     case OrderStatus.Completed:
+                          SendOrderCompleteNotice(order); 
+                     break;
+                     default:
+                          throw new NotificationNotImplementedException();
+                }
+    }
+
+
+    public void SendOrderCreatedNotice(Order order)
+    {
+        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.UserId);
+        var notification = PrepareNotificationContentForOrderCreatedStatus(order, user);
+        if (user != null)
         {
-            
-            case OrderStatus.Approved:
-                SendOrderConfirmationNotice(order);
-                break;
-            case OrderStatus.Rejected:
-                SendOrderRejectionNotice(order);
-                break;
-            case OrderStatus.Sent:
-                SendOrderShippingNotice(order); 
-                break;
-            case OrderStatus.Completed:
-                SendOrderCompleteNotice(order); 
-                break;
-            default:
-                throw new NotificationNotImplementedException();
+            var OrderStatusNotification = new AlertMessage
+            {
+                Title = OrderStatusNotificationTemplates.Subject.ORDER_STATUS_UPDATE,
+                Content = notification,
+                UserId = user.Id,
+
+            };
+            _pustokDbContext.AlertMessages.Add(OrderStatusNotification);
+            var connectionIds = _orderStatusNotificationService.GetConnectionIds(user);
+
+            var OrderStatusNotificationViewModel = new OrderStatusNotificationViewModel
+            {
+                Content = OrderStatusNotification.Content,
+                Title = OrderStatusNotification.Title,
+                CreatedAt = DateTime.Now
+            };
+            OrderStatusNotificationViewModel.CreatedAt.ToString("dd/MM/yyyy");
+            _hubContext.Clients.Clients(connectionIds)
+            .SendAsync("SendOrderStatusNotification", OrderStatusNotificationViewModel)
+            .Wait();
         }
     }
+    private string PrepareNotificationContentForOrderCreatedStatus(Order order, User user)
+    {
+        var templayeBuilder = new StringBuilder(OrderStatusNotificationTemplates.Content.CREATED)
+            .Replace("{Surname}", user.LastName)
+            .Replace("{Name}", user.Name)
+            .Replace("{Order_Tracking_Code}", order.TrackingCode);
+        return templayeBuilder.ToString();
+    }
+
 
     public void SendOrderConfirmationNotice(Order order)
     {
-        var notification = PrepareNotificationContentForOrderApprovedStatus(order);
-        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.User.Id);  
+        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.UserId);
+        var notification = PrepareNotificationContentForOrderApprovedStatus(order, user);
         if (user != null)
         {
             var OrderStatusNotification = new AlertMessage
@@ -221,19 +267,19 @@ public class NotificationService : INotificationService
             .Wait();
         }
     }
-    private string PrepareNotificationContentForOrderApprovedStatus(Order order)
+    private string PrepareNotificationContentForOrderApprovedStatus(Order order, User user)
     {
         var templayeBuilder = new StringBuilder(OrderStatusNotificationTemplates.Content.APPROVED)
-            .Replace("{Surname}", order.User.LastName)
-            .Replace("{Name}", order.User.Name)
+            .Replace("{Surname}", user.LastName)
+            .Replace("{Name}", user.Name)
             .Replace("{Order_Tracking_Code}", order.TrackingCode);
         return templayeBuilder.ToString();  
     }
 
     public void SendOrderRejectionNotice(Order order)
     {
-        var notification = PrepareNotificationContentForOrderRejectedStatus(order);
-        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.User.Id);
+        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.UserId);
+        var notification = PrepareNotificationContentForOrderRejectedStatus(order, user);
         if (user != null)
         {
             var OrderStatusNotification = new AlertMessage
@@ -259,19 +305,20 @@ public class NotificationService : INotificationService
             .Wait();
         }
     }
-    private string PrepareNotificationContentForOrderRejectedStatus(Order order)
+    private string PrepareNotificationContentForOrderRejectedStatus(Order order, User user)
     {
         var templayeBuilder = new StringBuilder(OrderStatusNotificationTemplates.Content.REJECTED)
-            .Replace("{Surname}", order.User.LastName)
-            .Replace("{Name}", order.User.Name)
+            .Replace("{Surname}", user.LastName)
+            .Replace("{Name}", user.Name)
             .Replace("{Order_Tracking_Code}", order.TrackingCode);
         return templayeBuilder.ToString();
     }
 
     public void SendOrderShippingNotice(Order order)
     {
-        var notification = PrepareNotificationContentForOrderSentStatus(order);
-        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.User.Id);
+       
+        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.UserId);
+        var notification = PrepareNotificationContentForOrderSentStatus(order, user);
         if (user != null)
         {
             var OrderStatusNotification = new AlertMessage
@@ -297,11 +344,11 @@ public class NotificationService : INotificationService
             .Wait();
         }
     }
-    private string PrepareNotificationContentForOrderSentStatus(Order order)
+    private string PrepareNotificationContentForOrderSentStatus(Order order, User user)
     {
         var templayeBuilder = new StringBuilder(OrderStatusNotificationTemplates.Content.SENT)
-            .Replace("{Surname}", order.User.LastName)
-            .Replace("{Name}", order.User.Name)
+            .Replace("{Surname}", user.LastName)
+            .Replace("{Name}", user.Name)
             .Replace("{Order_Tracking_Code}", order.TrackingCode);
         return templayeBuilder.ToString();
     }
@@ -309,8 +356,9 @@ public class NotificationService : INotificationService
 
     public void SendOrderCompleteNotice(Order order)
     {
-        var notification = PrepareNotificationContentForOrderCompletedStatus(order);
-        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.User.Id);
+       
+        var user = _userService.GetAllCustomers().SingleOrDefault(u => u.Id == order.UserId);
+        var notification = PrepareNotificationContentForOrderCompletedStatus(order, user);
         if (user != null)
         {
             var OrderStatusNotification = new AlertMessage
@@ -336,11 +384,11 @@ public class NotificationService : INotificationService
             .Wait();
         }
     }
-    private string PrepareNotificationContentForOrderCompletedStatus(Order order)
+    private string PrepareNotificationContentForOrderCompletedStatus(Order order, User user )
     {
         var templayeBuilder = new StringBuilder(OrderStatusNotificationTemplates.Content.COMPLETED)
-            .Replace("{Surname}", order.User.LastName)
-            .Replace("{Name}", order.User.Name)
+            .Replace("{Surname}", user.LastName)
+            .Replace("{Name}", user.Name)
             .Replace("{Order_Tracking_Code}", order.TrackingCode);
         return templayeBuilder.ToString();
     }
