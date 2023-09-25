@@ -29,11 +29,11 @@ namespace Pustok.ViewComponents
                        Title = am.Title,
                        Content = am.Content,
                        CreatedAt = am.CreatedAt,
-                    
+                      
                    })
-                   .ToList();   
-
-                   return View(OrderStatusNotifications);
+                   .ToList();
+                
+                return View(OrderStatusNotifications);
             }
             var EmptyOrderStatusNotifications = new List<OrderStatusNotificationViewModel>();
             return View(EmptyOrderStatusNotifications);  
