@@ -20,18 +20,23 @@ namespace Pustok.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var OrderStatusNotifications = _dbContext.AlertMessages
-                .Where(am => am.UserId == _userService.CurrentUser.Id)
-                .Select(am => new OrderStatusNotificationViewModel
-                {
-                    Title = am.Title,
-                    Content = am.Content,
-                    CreatedAt = am.CreatedAt,
+            if(_userService.IsCurrentUserAuthenticated())
+            {
+               var OrderStatusNotifications = _dbContext.AlertMessages
+                   .Where(am => am.UserId == _userService.CurrentUser.Id)
+                   .Select(am => new OrderStatusNotificationViewModel
+                   {
+                       Title = am.Title,
+                       Content = am.Content,
+                       CreatedAt = am.CreatedAt,
                     
-                })
-                .ToList();   
+                   })
+                   .ToList();   
 
-            return View(OrderStatusNotifications);
+                   return View(OrderStatusNotifications);
+            }
+            var EmptyOrderStatusNotifications = new List<OrderStatusNotificationViewModel>();
+            return View(EmptyOrderStatusNotifications);  
         }
     }
 }

@@ -122,17 +122,17 @@
         @foreach (var OrderStatusNotification in Model)
         {
             <div class="notification-item">
-                @*@if(OrderStatusNotification.IsRead == false)
-                {
+               
+                
                    <div class="icon unread-icon">
                        <i class="fas fa-envelope fa-xl"></i>
                     </div>
 
-                }*@
                 
-                    <div class="icon read-icon">
+                
+                   @* <div class="icon read-icon">
                         <i class="fas fa-envelope fa-xl"></i>
-                    </div>
+                    </div>*@
                 
                 <div class="content">
                     <div class="notification-title">@OrderStatusNotification.Title</div>
