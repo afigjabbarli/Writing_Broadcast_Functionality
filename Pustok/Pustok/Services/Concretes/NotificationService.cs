@@ -218,6 +218,7 @@ public class NotificationService : INotificationService
 
             };
             _pustokDbContext.AlertMessages.Add(OrderStatusNotification);
+            _pustokDbContext.SaveChanges(); 
             var connectionIds = _orderStatusNotificationService.GetConnectionIds(user);
 
             var OrderStatusNotificationViewModel = new OrderStatusNotificationViewModel
@@ -256,6 +257,7 @@ public class NotificationService : INotificationService
                
             };
             _pustokDbContext.AlertMessages.Add(OrderStatusNotification);
+            _pustokDbContext.SaveChanges();
             var connectionIds = _orderStatusNotificationService.GetConnectionIds(user);
 
             var OrderStatusNotificationViewModel = new OrderStatusNotificationViewModel 
@@ -290,6 +292,7 @@ public class NotificationService : INotificationService
                
             };
             _pustokDbContext.AlertMessages.Add(OrderStatusNotification);
+            _pustokDbContext.SaveChanges();
             var connectionIds = _orderStatusNotificationService.GetConnectionIds(user);
             var OrderStatusNotificationViewModel = new OrderStatusNotificationViewModel
             {
@@ -329,6 +332,7 @@ public class NotificationService : INotificationService
                
             };
             _pustokDbContext.AlertMessages.Add(OrderStatusNotification);
+            _pustokDbContext.SaveChanges();
             var connectionIds = _orderStatusNotificationService.GetConnectionIds(user);
 
             var OrderStatusNotificationViewModel = new OrderStatusNotificationViewModel
@@ -369,6 +373,7 @@ public class NotificationService : INotificationService
                
             };
             _pustokDbContext.AlertMessages.Add(OrderStatusNotification);
+            _pustokDbContext.SaveChanges();
             var connectionIds = _orderStatusNotificationService.GetConnectionIds(user);
 
             var OrderStatusNotificationViewModel = new OrderStatusNotificationViewModel
