@@ -22,18 +22,23 @@ namespace Pustok.ViewComponents
         {
             if(_userService.IsCurrentUserAuthenticated())
             {
-               var OrderStatusNotifications = _dbContext.AlertMessages
-                   .Where(am => am.UserId == _userService.CurrentUser.Id)
-                   .Select(am => new OrderStatusNotificationViewModel
-                   {
-                       Title = am.Title,
-                       Content = am.Content,
-                       CreatedAt = am.CreatedAt,
+                if (_userService.GetAllCustomers().Contains(_userService.CurrentUser))
+                {
+                        var OrderStatusNotifications = _dbContext.AlertMessages
+                       .Where(am => am.UserId == _userService.CurrentUser.Id)
+                       .Select(am => new OrderStatusNotificationViewModel
+                       {
+                          Title = am.Title,
+                          Content = am.Content,
+                          CreatedAt = am.CreatedAt,
                       
-                   })
-                   .ToList();
-                
-                return View(OrderStatusNotifications);
+                       })
+                       .ToList();
+                       return View(OrderStatusNotifications);
+                }
+                var NotImplementedOrderStatusNotifications = new List<OrderStatusNotificationViewModel>();
+                return View(NotImplementedOrderStatusNotifications);
+
             }
             var EmptyOrderStatusNotifications = new List<OrderStatusNotificationViewModel>();
             return View(EmptyOrderStatusNotifications);  
